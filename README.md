@@ -37,15 +37,15 @@ So we are 100,000 requets and used concurrency X (see results table below for le
 
 
 #### Results
-| Concurrency |: # of requests | Total time (sec)  | Reqs/Sec | Avg. CPU | 90% percentile request time (ms) |
-|:-----------:|--------------:|------------------:|---------:|---------:|----------------------------------:|
-|1            |100,000        |313.665            | 318      | 5%       | 3                                 |
-|5            |100,000        |63.832             | 1566     | 20%      | 4                                 |
-|10           |100,000        |32.774             | 3051     | 35%      | 4                                 |
-|15           |100,000        |22.998             | 4348     | 48%      | 4                                 |
-|20           |100,000        |18.394             | 5436     | 56%      | 4                                 |
-|25           |100,000        |15.765             | 6343     | 60%      | 5                                 |
-|30           |100,000        |14.265             | 7009     | 70%      | 5                                 |
+| Concurrency | # of requests | Total time (sec) | Reqs/Sec | Avg. CPU | 90% percentile request time (ms) |
+|:-----------:|:-------------:|-----------------:|---------:|---------:|---------------------------------:|
+|1            |100,000        |313.665           | 318      | 5%       | 3                                |
+|5            |100,000        |63.832            | 1566     | 20%      | 4                                |
+|10           |100,000        |32.774            | 3051     | 35%      | 4                                |
+|15           |100,000        |22.998            | 4348     | 48%      | 4                                |
+|20           |100,000        |18.394            | 5436     | 56%      | 4                                |
+|25           |100,000        |15.765            | 6343     | 60%      | 5                                |
+|30           |100,000        |14.265            | 7009     | 70%      | 5                                |
 
 Twitter's Snowflake ([performance requirements](https://github.com/twitter/snowflake#requirements)) state:
 - minimum 10k ids per second per process
