@@ -51,17 +51,16 @@ func tillNextMillis(ts uint64) uint64 {
 }
 
 func (worker *IdWorker) Next() (uint64, error) {
+	worker.lock.Lock()
+	defer worker.lock.Unlock()
+
 	ts := timeGen()
 	if ts < worker.lastTimestamp {
 		err := fmt.Errorf("Clock is moving backwards. Rejecting requests until %d.", worker.lastTimestamp)
 		return 1, err
 	}
 
-	worker.lock.Lock()
-	defer worker.lock.Unlock()
-
 	if worker.lastTimestamp == ts {
-
 		worker.sequence = (worker.sequence + 1) & SequenceMask
 		if worker.sequence == 0 {
 			ts = tillNextMillis(ts)
