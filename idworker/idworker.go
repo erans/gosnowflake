@@ -2,6 +2,7 @@ package idworker
 
 import (
 	"fmt"
+	"github.com/erans/gosnowflake/snowflake"
 	"sync"
 	"time"
 )
@@ -27,9 +28,11 @@ var (
 )
 
 type IdWorker struct {
+	snowflake.Snowflake
+
 	lastTimestamp uint64
 	workerId      uint64
-	dataCenterId  uint64
+	datacenterId  uint64
 	sequence      uint64
 	lock          sync.Mutex
 }
@@ -48,6 +51,23 @@ func tillNextMillis(ts uint64) uint64 {
 		i = timestamp()
 	}
 	return i
+}
+
+func (worker *IdWorker) GetWorkerId() (int64, error) {
+	return int64(worker.workerId), nil
+}
+
+func (worker *IdWorker) GetDatacenterId() (int64, error) {
+	return int64(worker.datacenterId), nil
+}
+
+func (worker *IdWorker) GetTimestamp() (int64, error) {
+	return int64(time.Now().UnixNano() / nano), nil
+}
+
+func (worker *IdWorker) GetId(useragent string) (r int64, err error) {
+	id, err := worker.Next()
+	return int64(id), err
 }
 
 func (worker *IdWorker) Next() (uint64, error) {
@@ -72,7 +92,7 @@ func (worker *IdWorker) Next() (uint64, error) {
 	worker.lastTimestamp = ts
 
 	id := ((worker.lastTimestamp - Epoch) << TimestampLeftShift) |
-		(worker.dataCenterId << DatacenterIdShift) |
+		(worker.datacenterId << DatacenterIdShift) |
 		(worker.workerId << WorkerIdShift) |
 		worker.sequence
 
@@ -87,5 +107,5 @@ func NewIdWorker(workerId uint64, datacenterId uint64) (*IdWorker, error) {
 	if datacenterId > MaxDatacenterId || datacenterId < 0 {
 		return nil, fmt.Errorf("datacenterId can't be greater than %d or less than 0", datacenterId)
 	}
-	return &IdWorker{workerId: workerId, dataCenterId: datacenterId, lastTimestamp: 1, sequence: 0}, nil
+	return &IdWorker{workerId: workerId, datacenterId: datacenterId, lastTimestamp: 1, sequence: 0}, nil
 }

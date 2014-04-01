@@ -3,12 +3,17 @@
 Twitter's Snowflake server implemented in Go.
 Written by Eran Sandler ([@erans](http://twitter.com/erans))
 
-Currently supports a simple HTTP interface. Thrift interface conforming to Twitter's snowflake will follow soon.
-
+Supports two interfaces:
+- Simple HTTP -
 Execute this curl command to get a new ID:
 ```
 curl http://localhost:8080/api/snowflake
 ```
+
+- Thrift - Initial support using Thrift 0.9.1.
+    - Supports binary, compact, json and simple json protocols
+    - Framed and buffered transport
+    - No support for TLS
 
 ## Build
 Just grab it and run ```go build```. I've built and tested it with Go 1.2 on Linux and Mac.
@@ -56,8 +61,8 @@ As you can see we can get up to 7k ids per second, however with more than double
 In any case I never saw if the official implementation from Twitter even achieved these performance requirements and was too lazy to make the official implementation build and work with whatever sbt and Scala version it should (it doesn't really get built out-of-the-box). Hmpf.
 
 ## TODO
-- Implement Thrift support
+- ~~Implement Thrift support~~ (initial support is committed)
 - Consider implementing a simple binary TCP interface since we don't really need the whole Thrift interface, just a simple command to get an ID and and 2 respones, one OK with the ID and the other an error.
 - The current implementation uses the Twitter Epoch which is set way into the future causing the number to be very large - should it be changed to something else? Does it matter much?
-- Consider a different approch in which we use the worker ID internally to associate a worker (with a dedicated id per code) and use datacenterid to differenciate machines. That way we can remove the lock, or keep it and avoid contention. Keep in mind datacenterid is only 5 bits (32) so a smart allocation of workerid with datacenterid if more than 32 machines are required.
+- Consider a different approch in which we use the worker ID internally to associate a worker (with a dedicated id per code) and use datacenterid to differenciate machines. That way we can remove the lock, or keep it and avoid contention. Keep in mind datacenterid is only 5 bits (32) so a smart allocation of workerid with datacenterid if more than 32 machines is required.
 
