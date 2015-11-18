@@ -1,4 +1,5 @@
 # gosnowflake
+[![Build Status](https://travis-ci.org/erans/gosnowflake.svg?branch=master)](https://travis-ci.org/erans/gosnowflake)
 
 Twitter's Snowflake server implemented in Go.
 Written by Eran Sandler ([@erans](http://twitter.com/erans))
